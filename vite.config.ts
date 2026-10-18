@@ -3,8 +3,10 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 const DESCRIPTION = 'משחק זיכרון קלאסי: זכרו את הרצף, שחזרו אותו והגיעו לשיא!';
 
-// `base` will be set to the GitHub Pages path before deployment.
-export default defineConfig({
+// GitHub Pages serves the site under /simon/ (ADR-7). The dev server stays at /.
+// `vite preview` serves the build, so it must use the same base.
+export default defineConfig(({ command, isPreview }) => ({
+  base: command === 'build' || isPreview ? '/simon/' : '/',
   plugins: [
     VitePWA({
       // No skipWaiting: a new version takes over only after the app is fully closed,
@@ -41,4 +43,4 @@ export default defineConfig({
       },
     }),
   ],
-});
+}));

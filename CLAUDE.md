@@ -59,4 +59,5 @@
 > Claude ממלא זאת ברגע שהאפליקציה יכולה לרוץ (בדרך כלל בסיום Milestone 1), ומעדכן אם משהו משתנה.
 - **הרצה (dev):** `npm run dev` (כתובת: http://localhost:5173)
 - **בדיקות (test):** `npm test` (Vitest). בדיקת Build: `npm run build`
-- **בדיקת PWA/Offline:** `npm run build && npm run preview` (כתובת: http://localhost:4173). ה-Service Worker פעיל רק בגרסה הזו, לא ב-`npm run dev`.
+- **בדיקת PWA/Offline:** `npm run build && npm run preview` (כתובת: http://localhost:4173/simon/). ה-Service Worker פעיל רק בגרסה הזו, לא ב-`npm run dev`.
+- **פרסום:** push ל-`main` מפעיל את `.github/workflows/deploy.yml` (בדיקות ← Build ← GitHub Pages). כתובת: https://rotemtarter.github.io/simon/

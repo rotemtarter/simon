@@ -286,3 +286,8 @@ GitHub Pages (HTTPS)
 - „הצלילים אינם זמינים במכשיר זה” מופיעה מתחת ללוח כשאין Web Audio.
 
 **השלכות:** אין יעד ניווט נוסף. התקנה בטלפון מחייבת HTTPS, ולכן תיבדק במלואה רק אחרי הפריסה ל-GitHub Pages.
+
+### ADR-7: נתיב פרסום ו-Workflow לפריסה
+**הקשר:** ה-repo נקרא `simon`, ולכן GitHub Pages מגיש את האתר בכתובת `https://rotemtarter.github.io/simon/` (סעיף 2.7).
+**החלטה:** ב-`vite.config.ts` ה-`base` הוא `'/simon/'` ב-Build וב-`npm run preview`, ו-`'/'` בשרת הפיתוח. Workflow יחיד, `.github/workflows/deploy.yml`, רץ בכל push ל-`main` (וגם ידנית): `npm ci` ← `npm test` ← `npm run build` ← העלאת `dist` ל-GitHub Pages, עם הרשאות Pages בלבד. בדיקה או Build שנכשלים עוצרים את הפריסה.
+**השלכות:** בדיקת ה-Build המקומית נמצאת ב-`http://localhost:4173/simon/`. שינוי שם ה-repo או מעבר לדומיין מותאם מחייבים לעדכן את ה-`base`. לפני הפריסה הראשונה צריך להגדיר ב-GitHub: Settings ← Pages ← Source: GitHub Actions. בדפדפן שבו נבדק בעבר ה-Build בכתובת `http://localhost:4173/` (לפני ADR-7), ה-Service Worker הישן שנרשם שם עדיין תופס גם את `/simon/` ומגיש את הגרסה הישנה. הפתרון: למחוק את נתוני האתר `localhost:4173` בדפדפן. זה לא משפיע על האתר המפורסם.
