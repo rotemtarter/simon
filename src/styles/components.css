@@ -679,3 +679,18 @@
     transform: rotate(var(--angle)) translateY(-100px);
   }
 }
+
+/* ---------- Results storage (Milestone 3) ---------- */
+.history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.feedback__note {
+  margin-top: calc(-1 * var(--space-3));
+  margin-bottom: var(--space-4);
+  font-size: var(--small-size);
+  line-height: var(--small-line);
+  color: var(--light-purple);
+}

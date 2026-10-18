@@ -13,10 +13,8 @@ import {
   type GameState,
 } from '../game/engine';
 import { playColor, playFailure, playSuccess, playVictory, unlockAudio } from '../game/audio';
+import { loadBestScore, saveGame } from '../storage/history';
 import type { Screen } from '../router';
-
-// Placeholder until storage exists (Milestone 3).
-const BEST_SCORE = 0;
 
 // Timing (ms).
 const SEQUENCE_START_DELAY = 600;
@@ -49,6 +47,7 @@ function feedbackMarkup(options: {
   scoreLabel: string;
   score: number;
   withButton: boolean;
+  note?: string;
 }): string {
   const fireworks =
     options.kind === 'won'
@@ -66,9 +65,12 @@ function feedbackMarkup(options: {
       <hr class="feedback__divider" />
       <p class="feedback__label">${options.scoreLabel}</p>
       <p class="feedback__score">${options.score}</p>
+      ${options.note ? `<p class="feedback__note" role="status">${options.note}</p>` : ''}
       ${button}
     </section>`;
 }
+
+const SAVE_FAILED_NOTE = 'לא ניתן לשמור את התוצאה במכשיר זה';
 
 export function renderHome(): Screen {
   const screen = document.createElement('div');
@@ -80,11 +82,11 @@ export function renderHome(): Screen {
     </div>
 
     <header class="top-bar">
-      <a class="best-link" href="${ROUTES.aboutBest}" aria-label="השיא האישי: ${BEST_SCORE}">
+      <a class="best-link" href="${ROUTES.aboutBest}">
         ${icons.trophy}
         <span class="best-link__text">
           <span class="best-link__label">השיא האישי</span>
-          <span class="best-link__value">${BEST_SCORE}</span>
+          <span class="best-link__value"></span>
         </span>
       </a>
       <a class="icon-link icon-link--badge" href="${ROUTES.about}" aria-label="אודות">${icons.infoBadge}</a>
@@ -106,6 +108,9 @@ export function renderHome(): Screen {
   const announcer = screen.querySelector<HTMLElement>('[aria-live]')!;
 
   let state: GameState = createIdleState();
+  // Guards against saving the same game twice.
+  let resultSaved = false;
+  let saveFailed = false;
   const timers = new Set<number>();
 
   function later(fn: () => void, ms: number): void {
@@ -134,6 +139,25 @@ export function renderHome(): Screen {
     if (!el) return;
     el.classList.add('is-lit');
     later(() => el.classList.remove('is-lit'), ms);
+  }
+
+  // null = storage unavailable.
+  function updateBestLink(best: number | null): void {
+    const text = best === null ? '—' : String(best);
+    screen.querySelector('.best-link__value')!.textContent = text;
+    screen.querySelector('.best-link')!.setAttribute('aria-label', `השיא האישי: ${text}`);
+  }
+
+  function saveResult(): void {
+    if (resultSaved) return;
+    resultSaved = true;
+    const saved = saveGame({
+      score: state.score,
+      finalLevel: state.level,
+      result: state.phase === 'won' ? 'won' : 'lost',
+    });
+    saveFailed = !saved;
+    if (saved) updateBestLink(loadBestScore());
   }
 
   function setPlaying(playing: boolean): void {
@@ -187,8 +211,10 @@ export function renderHome(): Screen {
       ...content,
       score: state.score,
       withButton: kind !== 'success',
+      note: kind !== 'success' && saveFailed ? SAVE_FAILED_NOTE : undefined,
     });
-    announce(`${content.title} ${content.text}. ${content.scoreLabel}: ${state.score}`);
+    const note = kind !== 'success' && saveFailed ? ` ${SAVE_FAILED_NOTE}` : '';
+    announce(`${content.title} ${content.text}. ${content.scoreLabel}: ${state.score}.${note}`);
     area.querySelector<HTMLButtonElement>('[data-action="start"]')?.focus({ preventScroll: true });
   }
 
@@ -217,6 +243,8 @@ export function renderHome(): Screen {
     unlockAudio();
     clearTimers();
     state = startGame();
+    resultSaved = false;
+    saveFailed = false;
     beginLevel();
   }
 
@@ -229,6 +257,7 @@ export function renderHome(): Screen {
     playColor(color, PRESS_LIGHT_ON);
 
     if (result.outcome === 'correct') return;
+    if (result.outcome === 'failed' || result.outcome === 'won') saveResult();
 
     // Level finished or game over: block further input until the result is shown.
     area.querySelectorAll<HTMLButtonElement>('.tile').forEach((el) => (el.disabled = true));
@@ -263,6 +292,7 @@ export function renderHome(): Screen {
     }
   });
 
+  updateBestLink(loadBestScore());
   showIdle();
 
   return { element: screen, destroy: clearTimers };
