@@ -12,6 +12,9 @@ export const icons = {
   speaker: line(
     '<path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z"/><path d="M15.5 9.5a3.5 3.5 0 0 1 0 5"/><path d="M18 7a7 7 0 0 1 0 10"/>',
   ),
+  cloudOff: line(
+    '<path d="M7 18h10.5a4 4 0 0 0 .9-7.9A6 6 0 0 0 8.2 7.6"/><path d="M5.2 9.5A4.5 4.5 0 0 0 7 18"/><path d="M3 3l18 18"/>',
+  ),
   back: line('<path d="M15 5l-7 7 7 7"/>'),
   chevron: line('<path d="M14 7l-5 5 5 5"/>'),
   check: line('<path d="M5 12.5l4.5 4.5L19 7.5"/>'),

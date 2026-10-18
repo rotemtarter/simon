@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="75%">
+      <stop offset="0" stop-color="#4B2E83"/>
+      <stop offset="1" stop-color="#0F172A"/>
+    </radialGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7cc4ff"/><stop offset=".5" stop-color="#2e7bff"/><stop offset="1" stop-color="#1e4fe6"/></linearGradient>
+    <linearGradient id="red" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff8aa8"/><stop offset=".5" stop-color="#ff2d6a"/><stop offset="1" stop-color="#e01452"/></linearGradient>
+    <linearGradient id="yellow" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffee70"/><stop offset=".5" stop-color="#ffc21a"/><stop offset="1" stop-color="#ff9a0a"/></linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8cf59a"/><stop offset=".5" stop-color="#22d65a"/><stop offset="1" stop-color="#10a83e"/></linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <g stroke-width="6">
+    <rect x="132" y="132" width="116" height="116" rx="26" fill="url(#blue)" stroke="#7cc4ff"/>
+    <rect x="264" y="132" width="116" height="116" rx="26" fill="url(#red)" stroke="#ff8aa8"/>
+    <rect x="132" y="264" width="116" height="116" rx="26" fill="url(#yellow)" stroke="#ffee70"/>
+    <rect x="264" y="264" width="116" height="116" rx="26" fill="url(#green)" stroke="#8cf59a"/>
+  </g>
+</svg>

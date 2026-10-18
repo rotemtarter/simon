@@ -7,6 +7,7 @@ import './styles/base.css';
 import './styles/components.css';
 import { startRouter } from './router';
 import { renderSpaceBackground } from './ui/background';
+import { registerServiceWorker, watchConnection } from './pwa';
 
 const background = document.querySelector<HTMLElement>('.space-bg');
 if (background) {
@@ -17,3 +18,6 @@ const root = document.getElementById('app');
 if (root) {
   startRouter(root);
 }
+
+registerServiceWorker();
+watchConnection();

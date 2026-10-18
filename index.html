@@ -5,11 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#0F172A" />
     <meta name="description" content="משחק זיכרון קלאסי: זכרו את הרצף, שחזרו אותו והגיעו לשיא!" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="סיימון" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png" />
     <title>סיימון</title>
+    <style>
+      /* Shown only if the app's files fail to load; the app replaces #app as soon as it starts. */
+      html {
+        background: #0f172a;
+      }
+      .load-error {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        color: #fff;
+        font: 18px/1.6 system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+        text-align: center;
+        visibility: hidden;
+        animation: load-error-show 0s linear 3s forwards;
+      }
+      @keyframes load-error-show {
+        to {
+          visibility: visible;
+        }
+      }
+    </style>
   </head>
   <body>
     <div class="space-bg" aria-hidden="true"></div>
-    <div id="app"></div>
+    <div id="app">
+      <p class="load-error">לא ניתן לטעון את המשחק. התחברו לאינטרנט ונסו שוב.</p>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

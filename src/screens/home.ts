@@ -14,6 +14,7 @@ import {
 } from '../game/engine';
 import { playColor, playFailure, playSuccess, playVictory, unlockAudio } from '../game/audio';
 import { loadBestScore, saveGame } from '../storage/history';
+import { setGameActive } from '../game/activity';
 import type { Screen } from '../router';
 
 // Timing (ms).
@@ -71,6 +72,7 @@ function feedbackMarkup(options: {
 }
 
 const SAVE_FAILED_NOTE = 'לא ניתן לשמור את התוצאה במכשיר זה';
+const NO_SOUND_NOTE = 'הצלילים אינם זמינים במכשיר זה';
 
 export function renderHome(): Screen {
   const screen = document.createElement('div');
@@ -111,6 +113,7 @@ export function renderHome(): Screen {
   // Guards against saving the same game twice.
   let resultSaved = false;
   let saveFailed = false;
+  let soundAvailable = true;
   const timers = new Set<number>();
 
   function later(fn: () => void, ms: number): void {
@@ -182,7 +185,8 @@ export function renderHome(): Screen {
     area.innerHTML = `
       <p class="level-label">שלב ${state.level} מתוך ${TOTAL_LEVELS}</p>
       ${boardMarkup}
-      <p class="hint">${icons.speaker}<span class="hint__text"></span></p>`;
+      <p class="hint">${icons.speaker}<span class="hint__text"></span></p>
+      ${soundAvailable ? '' : `<p class="sound-note" role="status">${NO_SOUND_NOTE}</p>`}`;
     updateBoard();
   }
 
@@ -240,7 +244,8 @@ export function renderHome(): Screen {
   }
 
   function start(): void {
-    unlockAudio();
+    soundAvailable = unlockAudio();
+    setGameActive(true);
     clearTimers();
     state = startGame();
     resultSaved = false;
@@ -266,9 +271,11 @@ export function renderHome(): Screen {
       if (result.outcome === 'failed') {
         showFeedback('failed');
         playFailure();
+        setGameActive(false);
       } else if (result.outcome === 'won') {
         showFeedback('won');
         playVictory();
+        setGameActive(false);
       } else {
         showFeedback('success');
         playSuccess();
@@ -295,5 +302,11 @@ export function renderHome(): Screen {
   updateBestLink(loadBestScore());
   showIdle();
 
-  return { element: screen, destroy: clearTimers };
+  return {
+    element: screen,
+    destroy: () => {
+      clearTimers();
+      setGameActive(false);
+    },
+  };
 }

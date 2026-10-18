@@ -13,20 +13,23 @@ const COLOR_FREQUENCIES: Record<Color, number> = {
 let context: AudioContext | null = null;
 
 // Must be called from a user gesture (e.g. the start button) so browsers allow sound.
-export function unlockAudio(): void {
+// Returns false when the device has no usable audio engine.
+export function unlockAudio(): boolean {
   try {
     if (!context) {
       const Ctor =
         window.AudioContext ??
         (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-      if (!Ctor) return;
+      if (!Ctor) return false;
       context = new Ctor();
     }
     if (context.state === 'suspended') {
       void context.resume().catch(() => undefined);
     }
+    return true;
   } catch {
     context = null;
+    return false;
   }
 }
 
