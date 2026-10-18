@@ -455,3 +455,227 @@
   height: 18px;
   color: var(--slate);
 }
+
+/* ---------- Game states (home screen) ---------- */
+.game-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+}
+
+/* During a game the top bar and bottom navigation are hidden (per the wireframes). */
+.screen--home.is-playing .top-bar,
+.screen--home.is-playing .bottom-nav {
+  display: none;
+}
+
+.screen--home.is-playing .home-main {
+  justify-content: flex-start;
+  padding-top: var(--space-5);
+}
+
+.screen--home.is-playing .home-decor__astronaut {
+  bottom: var(--space-2);
+}
+
+.tile {
+  transition:
+    filter 120ms ease,
+    transform 120ms ease,
+    box-shadow 120ms ease;
+}
+
+.tile:not(:disabled) {
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+/* Player's turn: tiles slightly dimmed until pressed (per the mockups). */
+.board--input .tile {
+  filter: brightness(0.72) saturate(0.85);
+}
+
+.tile.is-lit,
+.board--input .tile.is-lit {
+  filter: brightness(1.3) saturate(1.15);
+  transform: scale(1.05);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--tile-light) 70%, transparent),
+    0 0 46px 10px color-mix(in srgb, var(--tile-color) 85%, transparent),
+    inset 0 0 22px #fff;
+}
+
+.hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.hint .icon {
+  width: 34px;
+  height: 34px;
+}
+
+/* ---------- Feedback: success / failure / victory ---------- */
+.feedback {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  width: 100%;
+  padding-top: var(--space-3);
+  text-align: center;
+}
+
+.feedback__badge {
+  --badge-color: var(--electric-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 112px;
+  height: 112px;
+  margin-bottom: var(--space-3);
+  border: 5px solid var(--badge-color);
+  border-radius: var(--radius-circle);
+  background: rgba(15, 23, 42, 0.35);
+  color: var(--badge-color);
+  box-shadow:
+    0 0 26px color-mix(in srgb, var(--badge-color) 70%, transparent),
+    inset 0 0 18px color-mix(in srgb, var(--badge-color) 45%, transparent);
+  animation: badge-pop 360ms ease-out;
+}
+
+.feedback__badge .icon {
+  width: 60px;
+  height: 60px;
+  stroke-width: 3;
+}
+
+.feedback--success .feedback__badge {
+  --badge-color: #7cc4ff;
+}
+
+.feedback--failed .feedback__badge {
+  --badge-color: var(--rocket-red);
+}
+
+.feedback--won .feedback__badge {
+  --badge-color: var(--sunset-orange);
+  color: var(--starlight-yellow);
+}
+
+.feedback__title {
+  font-size: var(--h1-size);
+  line-height: var(--h1-line);
+  font-weight: 700;
+}
+
+.feedback__text {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 500;
+}
+
+.feedback__divider {
+  width: 60%;
+  margin: var(--space-3) 0;
+  border: 0;
+  border-top: 1px solid rgba(201, 182, 255, 0.35);
+}
+
+.feedback__label {
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 500;
+}
+
+.feedback__score {
+  font-size: 48px;
+  line-height: 56px;
+  font-weight: 700;
+  margin-bottom: var(--space-4);
+}
+
+@keyframes badge-pop {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Victory fireworks: CSS-only rays bursting around the star badge. */
+.fireworks {
+  position: absolute;
+  top: calc(var(--space-3) + 56px);
+  left: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.fireworks span {
+  position: absolute;
+  left: -2.5px;
+  bottom: 0;
+  width: 5px;
+  height: 56px;
+  border-radius: 4px;
+  background: linear-gradient(to top, transparent 0%, var(--ray-color, var(--magenta)) 100%);
+  transform-origin: 50% 100%;
+  opacity: 0;
+  animation: firework 1.6s ease-out infinite;
+}
+
+.fireworks span:nth-child(1) { --ray-color: var(--magenta); --angle: -115deg; }
+.fireworks span:nth-child(2) { --ray-color: var(--light-purple); --angle: -80deg; animation-delay: 0.2s; }
+.fireworks span:nth-child(3) { --ray-color: var(--turquoise); --angle: -55deg; animation-delay: 0.4s; }
+.fireworks span:nth-child(4) { --ray-color: var(--starlight-yellow); --angle: -30deg; animation-delay: 0.1s; }
+.fireworks span:nth-child(5) { --ray-color: var(--magenta); --angle: 55deg; animation-delay: 0.3s; }
+.fireworks span:nth-child(6) { --ray-color: var(--light-purple); --angle: 30deg; animation-delay: 0.5s; }
+.fireworks span:nth-child(7) { --ray-color: var(--turquoise); --angle: 80deg; animation-delay: 0.15s; }
+.fireworks span:nth-child(8) { --ray-color: var(--sunset-orange); --angle: 115deg; animation-delay: 0.35s; }
+
+@keyframes firework {
+  0% {
+    transform: rotate(var(--angle)) translateY(-66px) scaleY(0.3);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(var(--angle)) translateY(-112px) scaleY(1);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile,
+  .tile.is-lit,
+  .board--input .tile.is-lit {
+    transition: none;
+    transform: none;
+  }
+
+  .feedback__badge {
+    animation: none;
+  }
+
+  .fireworks span {
+    animation: none;
+    opacity: 0.6;
+    transform: rotate(var(--angle)) translateY(-100px);
+  }
+}

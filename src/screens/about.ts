@@ -1,11 +1,12 @@
 import { icons } from '../ui/icons';
 import { art } from '../ui/art';
 import { ROUTES } from '../routes';
+import type { Screen } from '../router';
 
 // Placeholder until the personal best is read from storage (Milestone 3).
 const BEST_SCORE = 0;
 
-export function renderAbout(): HTMLElement {
+export function renderAbout(): Screen {
   const screen = document.createElement('div');
   screen.className = 'screen screen--about';
   screen.innerHTML = `
@@ -40,5 +41,5 @@ export function renderAbout(): HTMLElement {
       </section>
     </main>
   `;
-  return screen;
+  return { element: screen };
 }

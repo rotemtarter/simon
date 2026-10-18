@@ -1,0 +1,83 @@
+// Game sounds generated with the Web Audio API (no audio files, works offline).
+// If audio is unavailable or blocked, every function silently does nothing.
+import type { Color } from './engine';
+
+// Classic Simon-style pitches, one per color.
+const COLOR_FREQUENCIES: Record<Color, number> = {
+  green: 415.3,
+  red: 310,
+  yellow: 252,
+  blue: 209,
+};
+
+let context: AudioContext | null = null;
+
+// Must be called from a user gesture (e.g. the start button) so browsers allow sound.
+export function unlockAudio(): void {
+  try {
+    if (!context) {
+      const Ctor =
+        window.AudioContext ??
+        (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+      if (!Ctor) return;
+      context = new Ctor();
+    }
+    if (context.state === 'suspended') {
+      void context.resume().catch(() => undefined);
+    }
+  } catch {
+    context = null;
+  }
+}
+
+function tone(
+  frequency: number,
+  durationMs: number,
+  options: { delayMs?: number; type?: OscillatorType; volume?: number } = {},
+): void {
+  if (!context) return;
+  try {
+    const { delayMs = 0, type = 'triangle', volume = 0.3 } = options;
+    const start = context.currentTime + delayMs / 1000;
+    const end = start + durationMs / 1000;
+
+    const oscillator = context.createOscillator();
+    oscillator.type = type;
+    oscillator.frequency.setValueAtTime(frequency, start);
+
+    // Short fade in/out to avoid clicks.
+    const gain = context.createGain();
+    gain.gain.setValueAtTime(0, start);
+    gain.gain.linearRampToValueAtTime(volume, start + 0.015);
+    gain.gain.setValueAtTime(volume, Math.max(start + 0.015, end - 0.04));
+    gain.gain.linearRampToValueAtTime(0, end);
+
+    oscillator.connect(gain).connect(context.destination);
+    oscillator.start(start);
+    oscillator.stop(end + 0.02);
+  } catch {
+    // Ignore audio errors: the game keeps working without sound.
+  }
+}
+
+export function playColor(color: Color, durationMs: number): void {
+  tone(COLOR_FREQUENCIES[color], durationMs);
+}
+
+export function playSuccess(): void {
+  tone(523.25, 110, { type: 'sine' });
+  tone(659.25, 110, { type: 'sine', delayMs: 110 });
+  tone(783.99, 200, { type: 'sine', delayMs: 220 });
+}
+
+export function playFailure(): void {
+  tone(110, 450, { type: 'sawtooth', volume: 0.18 });
+  tone(98, 450, { type: 'square', volume: 0.08 });
+}
+
+export function playVictory(): void {
+  const notes = [523.25, 659.25, 783.99, 1046.5];
+  notes.forEach((frequency, i) => tone(frequency, 150, { type: 'sine', delayMs: i * 140 }));
+  tone(1046.5, 500, { type: 'triangle', delayMs: notes.length * 140 });
+  tone(783.99, 500, { type: 'triangle', delayMs: notes.length * 140, volume: 0.15 });
+}

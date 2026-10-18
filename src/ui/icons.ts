@@ -14,4 +14,7 @@ export const icons = {
   ),
   back: line('<path d="M15 5l-7 7 7 7"/>'),
   chevron: line('<path d="M14 7l-5 5 5 5"/>'),
+  check: line('<path d="M5 12.5l4.5 4.5L19 7.5"/>'),
+  close: line('<path d="M6 6l12 12"/><path d="M18 6L6 18"/>'),
+  star: `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.8l2.75 5.6 6.15.9-4.45 4.33 1.05 6.12L12 16.87l-5.5 2.88 1.05-6.12L3.1 9.3l6.15-.9z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>`,
 };
