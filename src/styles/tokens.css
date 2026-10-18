@@ -1,0 +1,62 @@
+/* Design tokens from spec/DESIGN.md (Style Guide). */
+:root {
+  /* Palette */
+  --galaxy-purple: #4b2e83;
+  --magenta: #ff2d9b;
+  --electric-blue: #2e7bff;
+  --turquoise: #00c2d1;
+  --sunset-orange: #ff8a3d;
+  --starlight-yellow: #ffd93d;
+  --rocket-red: #ff4757;
+  --light-purple: #c9b6ff;
+  --dark-navy: #0f172a;
+  --slate: #475569;
+  --cool-gray: #94a3b8;
+  --light-gray: #e2e8f0;
+  --background: #f8fafc;
+
+  /* Game tiles (green has no HEX in the spec; chosen to match the mockup) */
+  --tile-blue: var(--electric-blue);
+  --tile-red: var(--rocket-red);
+  --tile-yellow: var(--starlight-yellow);
+  --tile-green: #2fd36b;
+
+  /* Typography */
+  --font-family: 'Heebo', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+  --h1-size: 32px;
+  --h1-line: 40px;
+  --h2-size: 26px;
+  --h2-line: 34px;
+  --h3-size: 20px;
+  --h3-line: 28px;
+  --body-size: 16px;
+  --body-line: 24px;
+  --small-size: 14px;
+  --small-line: 20px;
+  --caption-size: 12px;
+  --caption-line: 16px;
+
+  /* Spacing */
+  --space-1: 8px;
+  --space-2: 12px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+
+  /* Corners */
+  --radius-card: 12px;
+  --radius-pill: 24px;
+  --radius-circle: 50%;
+
+  /* Borders, shadows, glow */
+  --border-light: 1px solid var(--light-gray);
+  --shadow: 0 4px 12px rgba(79, 46, 131, 0.1);
+  --shadow-elevated: 0 8px 24px rgba(79, 46, 131, 0.15);
+  --gradient-primary: linear-gradient(270deg, #6a3df0 0%, #9b3fe8 60%, #c43cd6 100%);
+  --glow-primary: 0 0 22px rgba(155, 63, 232, 0.55);
+
+  /* Layout */
+  --content-max: 480px;
+  --tap-min: 44px;
+  --nav-height: 64px;
+}

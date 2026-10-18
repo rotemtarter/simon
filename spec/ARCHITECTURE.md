@@ -250,3 +250,15 @@ GitHub Pages (HTTPS)
 6. GitHub Docs — Using custom workflows with GitHub Pages: [https\://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)  
 7. Vite — Deploying a Static Site / GitHub Pages: [https\://vite.dev/guide/static-deploy.html](https://vite.dev/guide/static-deploy.html)  
 8. GitHub Docs — GitHub Pages limits: [https\://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)
+
+## החלטות מרכזיות (ADRs)
+
+### ADR-1: ניתוב מבוסס hash
+**הקשר:** לאפליקציה שני מסכים בלבד (בית ואודות), והיא מתארחת ב-GitHub Pages, שאינו תומך בהפניית כל הכתובות ל-`index.html`.
+**החלטה:** ניתוב פשוט מבוסס hash, בלי ספרייה: `#/` למסך הבית, `#/about` למסך אודות, ו-`#/about?best` לפתיחת אודות ישירות בכרטיס השיא האישי. כתובת לא מוכרת מחזירה למסך הבית.
+**השלכות:** אין צורך בהגדרות שרת או בדף 404 מיוחד; כפתור "אחורה" של הדפדפן ורענון הדף עובדים בכל מסך. הכתובות כוללות `#`.
+
+### ADR-2: גופן ואיורים מקומיים בלבד
+**הקשר:** המשחק צריך לעבוד Offline לאחר התקנה (Milestone 4), וסעיף 2.2 אוסר להסתמך על משאבים מ-CDN בזמן ריצה. קובץ `spec/illustrations.png` קטן, עם רקע לבן וכמה איורים יחד, ולכן אינו מתאים לשימוש ישיר.
+**החלטה:** הגופן Heebo נטען מהחבילה `@fontsource/heebo` (משקלים 400–700) ונארז עם האתר. האייקונים, משטח הכוכב בתחתית וכוכבי הלכת הקטנים נוצרים בקוד (SVG/CSS) לפי ה-Mockups. האסטרונאוט, הערפילית ותמונת הכוכבים נגזרו מתמונת ייחוס שסיפקה המשתמשת ונשמרים כקובצי WebP ב-`src/assets/`. השביט וכוכבי הלכת מאותה תמונה לא נכללו, כי מופיע עליהם סימן מים של Canva.
+**השלכות:** אין בקשות רשת חיצוניות; כל המשאבים נכללים ב-Build ויהיו זמינים לשמירה מראש ב-Service Worker. איכות האיורים מוגבלת לרזולוציה של תמונת הייחוס.
