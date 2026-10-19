@@ -21,15 +21,41 @@ export function unlockAudio(): boolean {
         window.AudioContext ??
         (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
       if (!Ctor) return false;
+      useMediaAudioSession();
       context = new Ctor();
+      playSilence(context);
     }
-    if (context.state === 'suspended') {
+    // iOS may report 'interrupted' after a call or after the app was in the background.
+    if (context.state !== 'running') {
       void context.resume().catch(() => undefined);
     }
     return true;
   } catch {
     context = null;
     return false;
+  }
+}
+
+// On iPhone, Web Audio is muted by the silent switch unless the page asks for a
+// media ("playback") audio session (Safari 16.4+). Older browsers ignore this.
+function useMediaAudioSession(): void {
+  try {
+    const session = (navigator as unknown as { audioSession?: { type: string } }).audioSession;
+    if (session) session.type = 'playback';
+  } catch {
+    // Not supported: sound still works when the phone is not on silent.
+  }
+}
+
+// Playing a tiny silent buffer inside the user's tap fully unlocks audio on older iOS.
+function playSilence(ctx: AudioContext): void {
+  try {
+    const source = ctx.createBufferSource();
+    source.buffer = ctx.createBuffer(1, 1, 22050);
+    source.connect(ctx.destination);
+    source.start(0);
+  } catch {
+    // Ignore.
   }
 }
 

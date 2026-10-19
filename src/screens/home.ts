@@ -254,6 +254,8 @@ export function renderHome(): Screen {
   }
 
   function press(color: Color): void {
+    // Each tap is a user gesture: re-wake audio if the phone suspended it.
+    unlockAudio();
     const result = pressColor(state, color);
     if (result.outcome === 'ignored') return;
     state = result.state;

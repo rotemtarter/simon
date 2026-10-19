@@ -465,20 +465,6 @@
   width: 100%;
 }
 
-/* During a game the top bar and bottom navigation are hidden (per the wireframes). */
-.screen--home.is-playing .top-bar,
-.screen--home.is-playing .bottom-nav {
-  display: none;
-}
-
-.screen--home.is-playing .home-main {
-  justify-content: flex-start;
-  padding-top: var(--space-5);
-}
-
-.screen--home.is-playing .home-decor__astronaut {
-  bottom: var(--space-2);
-}
 
 .tile {
   transition:
@@ -602,6 +588,54 @@
   line-height: 56px;
   font-weight: 700;
   margin-bottom: var(--space-4);
+}
+
+/* Short screens: keep the result card and the bottom navigation on one screen. */
+@media (max-height: 680px) {
+  .feedback__badge {
+    width: 84px;
+    height: 84px;
+    margin-bottom: var(--space-2);
+  }
+
+  .feedback__badge .icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .feedback__divider {
+    margin: var(--space-2) 0;
+  }
+
+  .feedback__score {
+    margin-bottom: var(--space-3);
+  }
+}
+
+/* Very short screens (e.g. iPhone SE in Safari). */
+@media (max-height: 600px) {
+  .home-main {
+    padding-bottom: var(--space-3);
+  }
+
+  .feedback {
+    padding-top: 0;
+  }
+
+  .feedback__badge {
+    width: 64px;
+    height: 64px;
+  }
+
+  .feedback__badge .icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .feedback__score {
+    font-size: 40px;
+    line-height: 48px;
+  }
 }
 
 @keyframes badge-pop {
