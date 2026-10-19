@@ -9,8 +9,8 @@ export default defineConfig(({ command, isPreview }) => ({
   base: command === 'build' || isPreview ? '/simon/' : '/',
   plugins: [
     VitePWA({
-      // No skipWaiting: a new version takes over only after the app is fully closed,
-      // so a running game is never reloaded and old/new files never mix (ADR-5).
+      // A new version waits and is applied from src/pwa.ts only when no game is running,
+      // so a game is never reloaded and old/new files never mix (ADR-8).
       registerType: 'prompt',
       injectRegister: false,
       // Icons are already precached by globPatterns below.

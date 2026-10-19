@@ -4,9 +4,28 @@ import { isGameActive, onGameIdle } from './game/activity';
 
 // Registers the service worker that caches the app for offline use.
 // If registration fails (unsupported browser, insecure origin), the site still works normally.
+// A new version is applied (activate + reload) only when no game is running, so a game is
+// never cut off and old/new files never mix (ADR-8). iOS keeps Safari tabs and installed apps
+// alive, so waiting for every window to close (ADR-5) could keep the old version forever.
 export function registerServiceWorker(): void {
   try {
-    registerSW({ immediate: true });
+    let updatePending = false;
+    const updateSW = registerSW({
+      immediate: true,
+      onNeedRefresh() {
+        updatePending = true;
+        tryApply();
+      },
+    });
+    function tryApply(): void {
+      if (updatePending && !isGameActive()) void updateSW(true);
+    }
+    // If the new version arrives mid-game, apply it on the next navigation or when the app
+    // goes to the background after the game has ended.
+    window.addEventListener('hashchange', tryApply);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') tryApply();
+    });
   } catch {
     // Ignore: offline support is simply unavailable.
   }
