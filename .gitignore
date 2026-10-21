@@ -80,3 +80,6 @@ desktop.ini
 tmp/
 temp/
 *.tmp
+
+# --- Design asset downloads (images are kept in spec/) ---
+claude_design_assets.zip
